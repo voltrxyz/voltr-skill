@@ -1,0 +1,23 @@
+[package]
+name = "voltr-example-adaptor"
+version = "0.1.0"
+description = "Minimal Voltr adaptor example (modeled on voltr-basic-adaptor)"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "voltr_example_adaptor"
+
+[features]
+default = []
+# `cpi` lets other on-chain programs CPI into this adaptor; pulls in no-entrypoint.
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+# Required to generate the Anchor IDL (the vault/SDK reads the IDL to build CPI calls).
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = "0.31.1"
+anchor-spl = "0.31.1"
