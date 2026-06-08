@@ -5,7 +5,8 @@
 set -euo pipefail
 
 SKILL_NAME="voltr"
-SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="$REPO/skills/$SKILL_NAME"   # the skill folder (SKILL.md + references/ + examples/)
 CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 
 err()  { printf 'Error: %s\n' "$1" >&2; exit 1; }

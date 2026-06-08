@@ -56,7 +56,7 @@ To update an installed copy: `git -C ~/.claude/skills/voltr pull`.
 - **Automatically** when your request matches Voltr topics (vaults, adaptors, CPI, `@voltr/vault-sdk`, `sdk-scripts`, the vault program `vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8`, deposit/withdraw, LP tokens, high water mark, …).
 - **Explicitly** in Claude Code with `/voltr`.
 
-The agent loads the lightweight [SKILL.md](SKILL.md) router first, then pulls in only the reference and examples it needs for your task (progressive disclosure).
+The agent loads the lightweight [SKILL.md](skills/voltr/SKILL.md) router first, then pulls in only the reference and examples it needs for your task (progressive disclosure).
 
 ## Try it — example prompts
 
@@ -80,23 +80,25 @@ The agent loads the lightweight [SKILL.md](SKILL.md) router first, then pulls in
 
 ## What's inside
 
-- **[SKILL.md](SKILL.md)** — entry point: orientation, track picker, and the hard rules.
-- **[references/](references/)** — dense, agent-facing technical references:
-  - [architecture.md](references/architecture.md) — shared mental model: programs, fund flow, roles, accounting (LP / asset-per-LP / locked profit / HWM / fees), PDAs, deployed addresses, instruction & error lists. **Read first.**
-  - [vault-manager-cli.md](references/vault-manager-cli.md) — the `sdk-scripts` operator CLI (profiles, roles, transaction modes, every command group).
-  - [vault-manager-sdk.md](references/vault-manager-sdk.md) — the `@voltr/vault-sdk` v2 surface (`@solana/kit`).
-  - [depositor-and-api.md](references/depositor-and-api.md) — deposit/withdraw via SDK + the public REST API.
-  - [adaptor-creation.md](references/adaptor-creation.md) — build a custom on-chain adaptor (3-instruction interface, account order, position value, security).
-  - [cpi-integration.md](references/cpi-integration.md) — CPI into the vault program (5 instructions, verified discriminators, accounts, PDAs).
-- **[examples/](examples/)** — runnable, commented code:
-  - [examples/sdk/](examples/sdk/) — TypeScript: create vault, add adaptor + init strategy, allocate, read state.
-  - [examples/depositor/](examples/depositor/) — TypeScript: deposit, request/withdraw, instant withdraw, REST flow.
-  - [examples/adaptor/](examples/adaptor/) — a complete minimal Anchor adaptor program.
-  - [examples/cpi/](examples/cpi/) — drop-in Rust CPI wrapper structs for all five vault instructions.
+The skill itself lives in [`skills/voltr/`](skills/voltr/) (standard agent-skills layout):
+
+- **[SKILL.md](skills/voltr/SKILL.md)** — entry point: orientation, track picker, and the hard rules.
+- **[references/](skills/voltr/references/)** — dense, agent-facing technical references:
+  - [architecture.md](skills/voltr/references/architecture.md) — shared mental model: programs, fund flow, roles, accounting (LP / asset-per-LP / locked profit / HWM / fees), PDAs, deployed addresses, instruction & error lists. **Read first.**
+  - [vault-manager-cli.md](skills/voltr/references/vault-manager-cli.md) — the `sdk-scripts` operator CLI (profiles, roles, transaction modes, every command group).
+  - [vault-manager-sdk.md](skills/voltr/references/vault-manager-sdk.md) — the `@voltr/vault-sdk` v2 surface (`@solana/kit`).
+  - [depositor-and-api.md](skills/voltr/references/depositor-and-api.md) — deposit/withdraw via SDK + the public REST API.
+  - [adaptor-creation.md](skills/voltr/references/adaptor-creation.md) — build a custom on-chain adaptor (3-instruction interface, account order, position value, security).
+  - [cpi-integration.md](skills/voltr/references/cpi-integration.md) — CPI into the vault program (5 instructions, verified discriminators, accounts, PDAs).
+- **[examples/](skills/voltr/examples/)** — runnable, commented code:
+  - [examples/sdk/](skills/voltr/examples/sdk/) — TypeScript: create vault, add adaptor + init strategy, allocate, read state.
+  - [examples/depositor/](skills/voltr/examples/depositor/) — TypeScript: deposit, request/withdraw, instant withdraw, REST flow.
+  - [examples/adaptor/](skills/voltr/examples/adaptor/) — a complete minimal Anchor adaptor program.
+  - [examples/cpi/](skills/voltr/examples/cpi/) — drop-in Rust CPI wrapper structs for all five vault instructions.
 
 ## Scope & accuracy
 
-Grounded in the official Voltr docs and the on-chain programs. The TypeScript surface targets **v2** (`@voltr/vault-sdk` + `@solana/kit`); the legacy `VoltrClient` (v1) API is out of scope except as a migration source. The skill bakes in the easy-to-get-wrong rules — `maxCap: 0n` means *zero* capacity (use `u64::MAX` for uncapped), admin/manager key separation, the correct CPI discriminators (the upstream `vault-cpi` README has stale ones), and "never execute blind" (preview → simulate → execute). Always verify program addresses and discriminators against [references/architecture.md](references/architecture.md) and [references/cpi-integration.md](references/cpi-integration.md).
+Grounded in the official Voltr docs and the on-chain programs. The TypeScript surface targets **v2** (`@voltr/vault-sdk` + `@solana/kit`); the legacy `VoltrClient` (v1) API is out of scope except as a migration source. The skill bakes in the easy-to-get-wrong rules — `maxCap: 0n` means *zero* capacity (use `u64::MAX` for uncapped), admin/manager key separation, the correct CPI discriminators (the upstream `vault-cpi` README has stale ones), and "never execute blind" (preview → simulate → execute). Always verify program addresses and discriminators against [architecture.md](skills/voltr/references/architecture.md) and [cpi-integration.md](skills/voltr/references/cpi-integration.md).
 
 ## Links
 
