@@ -4,9 +4,13 @@ An [Agent Skill](https://docs.claude.com/en/docs/agents-and-tools/agent-skills) 
 
 ## Quick Install
 
+Using the [`skills`](https://github.com/vercel-labs/skills) CLI (the open agent-skills installer):
+
 ```bash
-npx add-skill https://github.com/voltrxyz/voltr-skill
+npx skills add https://github.com/voltrxyz/voltr-skill
 ```
+
+Target specific agents or install globally, e.g. `npx skills add https://github.com/voltrxyz/voltr-skill -a claude-code -g`. Prefer a self-contained install with no third-party CLI? Use the manual path below.
 
 ## Manual Install
 
