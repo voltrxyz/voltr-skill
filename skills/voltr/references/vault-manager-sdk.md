@@ -2,7 +2,7 @@
 
 > When to read this: building Voltr transactions in TypeScript with `@solana/kit` — admin + manager operations via the generated `@voltr/vault-sdk`. Read [architecture.md](./architecture.md) first for the mental model. Runnable code: [../examples/sdk/](../examples/sdk/). For the operator CLI built on top of this, see [vault-manager-cli.md](./vault-manager-cli.md).
 
-`@voltr/vault-sdk` `2.0.0` is a generated client built around instruction builders, PDA helpers, account fetchers, and extension helpers. The default client stack is `@solana/kit` (not `@solana/web3.js`).
+`@voltr/vault-sdk` `2.1.1` is a generated client built around instruction builders, PDA helpers, account fetchers, and extension helpers. The default client stack is `@solana/kit` (not `@solana/web3.js`).
 
 ## Install
 
@@ -225,17 +225,22 @@ Per-field encoding:
 
 ```typescript
 import {
+  fetchProtocol,
+  findProtocolPda,
   getHarvestFeeInstructionAsync,
   getCalibrateHighWaterMarkInstructionAsync,
 } from "@voltr/vault-sdk";
 
-// Harvest: mints accrued fees as LP into manager / admin / protocol accounts.
+const [protocolAddress] = await findProtocolPda();
+const protocol = await fetchProtocol(rpc, protocolAddress);
+
+// Harvest: mints accrued fees as LP into manager / admin / protocol treasury accounts.
 // Ensure those three LP ATAs exist first (idempotent create).
 const harvestIx = await getHarvestFeeInstructionAsync({
   harvester: adminSigner,            // signs + pays
   vaultManager: vaultManagerAddress, // receives manager share
   vaultAdmin: vaultAdminAddress,     // receives admin share
-  protocolAdmin: "vxyzZyfd6nJ3v82fTSmuRiKF4owWF9sAXqneu9mne9n", // protocol cut
+  protocolTreasury: protocol.data.treasury, // protocol cut; do not hard-code
   vault: vaultAddress,
 });
 

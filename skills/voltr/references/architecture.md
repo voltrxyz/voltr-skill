@@ -34,7 +34,7 @@ The "Voltr side" is stable; what varies per adaptor is: how the `strategy` addre
 - **Idle vs deployed.** Idle = assets in the vault's idle token account (no yield). Deployed = assets working in strategies. **Total assets = idle + sum of strategy position values.** Keep some idle to service withdrawals.
 - **LP token / asset-per-LP.** Depositors receive LP tokens (9 decimals) from the vault's LP mint. A user's claim ≈ `userLp / totalLpSupply × vaultAssetTotalValue`. `asset-per-LP` rises as strategies earn yield; it is the canonical NAV-per-share. Use `getCurrentAssetPerLpForVault` to read it; use `calculateAssetsForWithdraw` for the authoritative post-fee withdrawable figure (the share ratio is a display-only approximation).
 - **Locked profit.** Realized profit is not immediately withdrawable; it decays linearly over `lockedProfitDegradationDuration` (seconds) to deter timing/extraction attacks. During degradation, `asset-per-LP` for withdrawals is discounted.
-- **High water mark (HWM).** Performance fees apply only to profit above the historical peak `asset-per-LP`. Below the HWM, no performance fee accrues. Admin can recalibrate via `calibrate_high_water_mark`.
+- **High water mark (HWM).** Performance fees apply only to profit above the historical peak `asset-per-LP`. The first successful deposit seeds the HWM; below it, no performance fee accrues. Admin can recalibrate via `calibrate_high_water_mark`.
 
 ### Fees
 
@@ -47,7 +47,7 @@ Set at `initialize_vault`, updated later one field at a time by the admin via `u
 | Redemption | `redemptionFee` | charged on withdraw | Reduces the user's withdrawable amount. |
 | Issuance | `issuanceFee` | charged on deposit | Reduces LP minted on deposit. |
 
-Harvesting (`harvest_fee`) mints accrued fees as LP tokens into three accounts: the **vault manager**, the **vault admin**, and the **protocol admin** (`vxyzZyfd6nJ3v82fTSmuRiKF4owWF9sAXqneu9mne9n`). Read accrued fees with `getAccumulatedManagerFeesForVault` / `getAccumulatedAdminFeesForVault`.
+Harvesting (`harvest_fee`) mints accrued fees as LP tokens into three accounts: the **vault manager**, the **vault admin**, and the configurable **protocol treasury**. Read accrued fees with `getAccumulatedManagerFeesForVault` / `getAccumulatedAdminFeesForVault`; fetch the Protocol PDA to discover the current treasury rather than hard-coding it.
 
 ## Roles — keep separate keypairs
 
@@ -55,7 +55,7 @@ Voltr enforces a structural separation; treat these as distinct keypairs (use a 
 
 | Role | Authority | Signs |
 |---|---|---|
-| **Protocol admin** | Voltr-level. Receives the protocol cut of fees; governs `init_protocol` / `update_protocol`. | Fixed protocol value, not per-vault. |
+| **Protocol admin** | Voltr-level. Governs the protocol treasury/admin transfer and each vault's adaptor-policy override. | Protocol PDA; distinct from a vault admin. |
 | **Vault admin** | Vault *structure*: create vault, LP metadata, fee/config updates, add/remove adaptors, register direct-withdraw, harvest fees, admin transfer. | `vault:init*`, `update-config`, adaptor admin, `harvest-fee`, `accept-admin`. |
 | **Vault manager** | Fund *allocation*: initialize strategies, deposit/withdraw between idle and strategies, claim rewards, rebalance. Cannot change vault config. | All strategy operations (`kamino:*`, `spot:*`, `trustful:*`). |
 | **User** | Deposit / withdraw, request/cancel/claim, instant-withdraw, direct-withdraw. | `vault:deposit`, the withdrawal flows. |
@@ -95,13 +95,13 @@ Notes:
 | Jupiter / Spot Adaptor | `EW35URAx3LiM13fFK3QxAXfGemHso9HWPixrv7YDY4AM` |
 | Trustful Adaptor | `3pnpK9nrs1R65eMV1wqCXkDkhSgN18xb1G5pgYPwoZjJ` |
 | Upgrade authority (multisig) | `7p4d84NuXbuDhaAq9H3Yp3vpBSDLQWousp1a4jBVoBgU` |
-| Protocol admin (fee recipient) | `vxyzZyfd6nJ3v82fTSmuRiKF4owWF9sAXqneu9mne9n` |
+| Protocol treasury | Configurable on the Protocol PDA; fetch it on-chain instead of hard-coding an address. |
 
 ## Vault program instructions (from IDL)
 
 Grouped by who signs / what they do.
 
-**Protocol lifecycle (protocol admin):** `init_protocol`, `update_protocol`, `accept_protocol_admin`, `update_vault_protocol_fee`.
+**Protocol lifecycle (protocol admin):** `init_protocol`, `update_protocol`, `accept_protocol_admin`, `update_vault_protocol_fee`, `update_vault_adaptor_policy`. `update_protocol` can update operational state, pending admin, or treasury; the per-vault adaptor policy toggles whether a vault may add adaptors outside the protocol allowlist.
 
 **Vault lifecycle (admin):** `initialize_vault`, `create_lp_metadata`, `update_vault_config`, `accept_vault_admin`.
 

@@ -45,11 +45,12 @@ Empty strings / empty arrays mean "not provided" — only fill what a command ne
 
 ## Keypairs & roles
 
-Each command signs as one of three roles. The keypair path resolves from a **flag, falling back to an env var — the flag wins.** If neither is set, the command fails up front naming both.
+Each command signs as one of four roles. The keypair path resolves from a **flag, falling back to an env var — the flag wins.** If neither is set, the command fails up front naming both.
 
 | Role | Flag | Env var | Used by |
 |---|---|---|---|
 | `admin` | `--admin-keypair` | `ADMIN_KEYPAIR` | `vault:init*`, metadata, config, adaptor admin, harvest-fee, accept-admin |
+| `protocol admin` | `--admin-keypair` | `ADMIN_KEYPAIR` | protocol treasury/admin changes and per-vault adaptor-policy overrides |
 | `manager` | `--manager-keypair` | `MANAGER_KEYPAIR` | strategy operations (`kamino:*`, `spot:*`, `trustful:*`, claims) |
 | `user` | `--user-keypair` | `USER_KEYPAIR` | deposit/withdraw, direct-withdraw |
 
@@ -108,6 +109,7 @@ Discover exact per-command flags from the CLI itself: `pnpm cli -- <command> --h
 |---|---|
 | **Vault core (admin/user)** | `vault:init`, `vault:init-and-set-token-metadata`, `vault:set-token-metadata`, `vault:update-config`, `vault:accept-admin`, `vault:harvest-fee`, `vault:deposit`, `vault:request-withdraw`, `vault:withdraw`, `vault:cancel-request-withdraw`, `vault:instant-withdraw`, `vault:query:position`, `vault:query:strategy-positions` |
 | **Adaptor admin (admin)** | `vault:add-adaptor`, `vault:remove-adaptor`, `vault:init-direct-withdraw` |
+| **Protocol admin** | `protocol:update-treasury`, `protocol:set-pending-admin`, `protocol:accept-admin`, `vault:update-adaptor-policy` |
 | **Kamino (manager/user)** | `kamino:market:{init,deposit,withdraw,claim-reward,claim-reward-with-index}`, `kamino:kvault:{init,deposit,withdraw,claim-reward,claim-reward-with-index,direct-withdraw,request-and-direct-withdraw}` |
 | **Spot (manager)** | `spot:swap:{init,buy,sell}`, `spot:earn:{init,extend-lut,deposit,withdraw,init-direct-withdraw}`, `spot:query:strategy-positions` |
 | **Trustful (manager)** | `trustful:arbitrary:{init,deposit,withdraw}`, `trustful:curve:{init,borrow,repay,remove}` |
