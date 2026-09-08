@@ -104,3 +104,9 @@ Grounded in the official Voltr docs and the on-chain programs. The TypeScript su
 
 - Docs: https://docs.voltr.xyz · App: https://voltr.xyz · REST API: https://api.voltr.xyz (Swagger at `/docs`)
 - Repos: [`@voltr/vault-sdk`](https://github.com/voltrxyz/vault-sdk) · [`sdk-scripts`](https://github.com/voltrxyz/sdk-scripts) · [`vault-cpi`](https://github.com/voltrxyz/vault-cpi)
+
+## Neutral bundles
+
+The [Neutral reference](skills/voltr/references/neutral-bundles.md) covers permissioned registration,
+deposits, status queries and separate request/claim operations. Try: "Allocate USDC to a Neutral bundle,
+then show how to request and claim a redemption after keeper settlement."

@@ -1,6 +1,6 @@
 ---
 name: voltr
-description: "Build on Voltr — the permissionless vault framework for structured yield strategies on Solana. Use for any Voltr task: creating/configuring/operating vaults (vault managers, admin + manager roles), depositing/withdrawing as a user or app/frontend/bot, building custom on-chain adaptors that bridge a vault to a DeFi protocol (yield protocols), or CPI-ing into the vault program from another program (composing protocols). Triggers: voltr, voltr vault, @voltr/vault-sdk, vault-sdk, sdk-scripts, vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8, create vault, vault manager, allocate to strategy, deposit_vault/withdraw_vault, request withdraw, instant withdraw, LP token, asset-per-LP, high water mark, voltr adaptor, custom adaptor, deposit/withdraw strategy, Kamino/Drift/Spot/Jupiter/Trustful adaptor, CPI into voltr, compose vault LP. Solana + Anchor + @solana/kit."
+description: "Build on Voltr — the permissionless vault framework for structured yield strategies on Solana. Use for any Voltr task: creating/configuring/operating vaults (vault managers, admin + manager roles), depositing/withdrawing as a user or app/frontend/bot, building custom on-chain adaptors that bridge a vault to a DeFi protocol (yield protocols), or CPI-ing into the vault program from another program (composing protocols). Triggers: voltr, voltr vault, @voltr/vault-sdk, vault-sdk, sdk-scripts, vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8, create vault, vault manager, allocate to strategy, deposit_vault/withdraw_vault, request withdraw, instant withdraw, LP token, asset-per-LP, high water mark, voltr adaptor, custom adaptor, deposit/withdraw strategy, Kamino/Drift/Spot/Jupiter/Trustful/Neutral adaptor, CPI into voltr, compose vault LP. Solana + Anchor + @solana/kit."
 ---
 
 # Voltr
@@ -17,6 +17,9 @@ Voltr is a permissionless framework on Solana for building and operating yield-g
 | **Depositor / app dev** | Deposit & withdraw for users (frontend, bot, service) | [depositor-and-api.md](references/depositor-and-api.md) | [examples/depositor/](examples/depositor/) |
 | **Yield protocol** | Build a custom adaptor bridging a vault to your protocol | [adaptor-creation.md](references/adaptor-creation.md) | [examples/adaptor/](examples/adaptor/) |
 | **Composing protocol** | CPI into the vault from your own on-chain program | [cpi-integration.md](references/cpi-integration.md) | [examples/cpi/](examples/cpi/) |
+
+For **Neutral bundle** deposits, permissioned registration, settlement status or redemption claims, read
+[references/neutral-bundles.md](references/neutral-bundles.md).
 
 ## Decision shortcuts
 

@@ -8,7 +8,7 @@ Voltr is a permissionless vault framework on Solana for structured yield strateg
 
 | | Vault program | Adaptor program |
 |---|---|---|
-| Count | One, canonical (`vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8`) | Many, one per integration (Lending, Kamino, Spot/Jupiter, Drift, Raydium, Trustful) |
+| Count | One, canonical (`vVoLTRjQmtFpiYoegx285Ze4gsLJ8ZxgFKVcuvmG1a8`) | Many, one per integration (Lending, Kamino, Spot/Jupiter, Drift, Raydium, Trustful, Neutral) |
 | Owns | Deposits, LP accounting, fees, allocation authority, withdrawal flows | A CPI translation layer between the vault and one target protocol |
 | Interface | Full instruction set (see table below) | Three standardized instructions: **initialize**, **deposit**, **withdraw** |
 | Returns | — | A `u64` position value reported back to the vault via `get_return_data` |
@@ -27,7 +27,7 @@ User deposits → Vault holds idle assets
               Adaptor reports the strategy's position value (u64) back to the vault
 ```
 
-The "Voltr side" is stable; what varies per adaptor is: how the `strategy` address is derived, the 8-byte instruction discriminator, the remaining-accounts list, and any extra serialized args. The adaptor packages (`@voltr/scripts-kamino`, `-spot`, `-trustful`) encapsulate exactly those four things.
+The "Voltr side" is stable; what varies per adaptor is: how the `strategy` address is derived, the 8-byte instruction discriminator, the remaining-accounts list, and any extra serialized args. The adaptor packages (`@voltr/scripts-kamino`, `-spot`, `-trustful`, `-neutral`) encapsulate exactly those four things.
 
 ## Fund flow & accounting
 
@@ -123,3 +123,8 @@ Grouped by who signs / what they do.
 - **One vault = one asset.** No multi-asset vaults.
 - **Build phase hits the network.** SDK/CLI operations read chain state to build instructions even when not sending (see the transaction modes in [vault-manager-cli.md](./vault-manager-cli.md)).
 - **v2 SDK only.** Use `@voltr/vault-sdk` + `@solana/kit`. The old `VoltrClient` (v1) API is gone; see the migration notes in [vault-manager-sdk.md](./vault-manager-sdk.md).
+
+## Neutral bundle adaptor
+
+Mainnet: `WpFotU6LNA9Rdk9rm1ZYNcaPCRXHZGRLVwxHXqcaRJG`.
+See [Neutral bundles](neutral-bundles.md) for account ownership and asynchronous settlement accounting.

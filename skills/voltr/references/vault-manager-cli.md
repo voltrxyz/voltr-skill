@@ -281,3 +281,8 @@ pnpm examples:check                                # offline typecheck + runtime
 ```
 
 Examples default to `print` and never send; `execute` is gated (type `yes`, or set `VOLTR_CONFIRM=1`). The `examples/src/composition/allocate.ts` file shows sequencing builders from more than one package through the shared processor. The skill's own runnable SDK examples (raw `@voltr/vault-sdk` + `@solana/kit`) are in [../examples/sdk/](../examples/sdk/).
+
+## Neutral bundles
+
+For `neutral:bundle:*`, follow [neutral-bundles.md](neutral-bundles.md): permissioned registration,
+deposit, refresh, request, keeper settlement and claim.
